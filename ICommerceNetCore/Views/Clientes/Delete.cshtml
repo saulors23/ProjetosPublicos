@@ -17,7 +17,7 @@
                         <form asp-action="Delete" method="post" class="mt-4">
                             <input type="hidden" asp-for="Id" />
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <div class="form-group">
                                         Deseja Realmente Excluir o(a) Cliente <strong><label asp-for="Nome" name="Nome" id="Nome" value="@Model?.Nome" class="control-label"> @Model?.Nome</label></strong>
                                     </div>
@@ -30,7 +30,6 @@
                                 <button type="submit" class="btn btn-success" title="Excluir o cadastro do Cliente">&nbsp;&nbsp;Sim&nbsp;&nbsp;</button>
                                 <a asp-action="Index" class="btn btn-warning ml-2">Não</a>
                             </div>
-                            <div>&nbsp;</div>
                         </form>
                     </div>                    
                 </div>
