@@ -1,0 +1,178 @@
+﻿@model ICommerceNetCore.Models.FornecedorModel
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Fim Font Awesome -->
+    <!-- Caminhos externos JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <!-- Fim caminhos externos JS -->
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card">
+                    <div style="background: #ff99cc" class="card-header text-white">
+                        <h3 class="mb-0">Cadastro de Fornecedores - Editar</h3>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Edit" method="post" class="mt-4">
+                            <input type="hidden" asp-for="Id" />
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Razao_Social" class="control-label">Razão Social: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Razao_Social" id="Razao_Social" value="@Model?.Razao_Social" style="width: 320px" required />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 offset-sm-3">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Cnpj" class="control-label">CNPJ: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Cnpj" id="Cnpj" value="@Model?.Cnpj" maxlength="18" style="width: 200px" readonly />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 offset-sm-0">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Inscricao_Estadual" class="control-label">Insc. Estadual: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Inscricao_Estadual" id="Inscricao_Estadual" value="@Model?.Inscricao_Estadual" maxlength="20" style="width: 130px" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>&nbsp;</div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Cep" class="control-label">CEP: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Cep" id="Cep" value="@Model?.Cep" maxlength="8" style="width: 200px" oninput="consultarCEP()" required />
+                                    </div>
+                                </div>
+                                <!-- col-sm = quanto maior segue para o lado direito, offset-sm = quanto menor segue para o lado esquerdo -->
+                                <div class="col-sm-3 offset-sm-1">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Endereco" class="control-label">Endereço: </label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Endereco" id="Endereco" value="@Model?.Endereco" style="width: 310px" readonly />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 offset-sm-2">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Numero" class="control-label">Número: </label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Numero" id="Numero" value="@Model?.Numero" style="width: 80px;" maxlength="8" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>&nbsp;</div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Complemento" class="control-label">Complemento: </label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Complemento" id="Complemento" value="@Model?.Complemento" tyle="width: 400px;" />
+                                    </div>
+                                </div>
+                                <!-- col-sm = quanto maior segue para o lado direito, offset-sm = quanto menor segue para o lado esquerdo -->
+                                <div class="col-sm-3 offset-sm-1">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Ponto_Referencia" class="control-label">Ponto Referência: </label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Ponto_Referencia" id="Ponto_Referencia" value="@Model?.Ponto_Referencia" style="width: 310px;" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 offset-sm-2">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Bairro" class="control-label">Bairro: </label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Bairro" id="Bairro" value="@Model?.Bairro" style="width: 205px;" readonly="readonly" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>&nbsp;</div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Cidade" class="control-label">Cidade: </label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Cidade" id="Cidade" value="@Model?.Cidade" style="width: 220px;" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <!-- col-sm = quanto maior segue para o lado direito, offset-sm = quanto menor segue para o lado esquerdo -->
+                                <div class="col-sm-3 offset-sm-1">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Uf" class="control-label">UF: </label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Uf" id="Uf" value="@Model?.Uf" style="width: 40px;" readonly="readonly" />
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-3 offset-sm-2">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Nome_Contato" class="control-label">Contato: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Nome_Contato" id="Nome_Contato" value="@Model?.Nome_Contato" maxlength="255" style="width: 220px;" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>&nbsp;</div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Fone_Fixo" class="control-label">Fone Fixo: </label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Fone_Fixo" id="Fone_Fixo" value="@Model?.Fone_Fixo" maxlength="13" style="width: 120px;" oninput="formatarTelefoneFixo(this)" />
+                                    </div>
+                                </div>
+                                <!-- col-sm = quanto maior segue para o lado direito, offset-sm = quanto menor segue para o lado esquerdo -->
+                                <div class="col-md-3 offset-sm-1">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Celular " class="control-label">Celular: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Celular" id="Celular" value="@Model?.Celular" maxlength="14" style="width: 136px;" oninput="formatarTelefoneCelular(this)" required />
+                                    </div>
+                                </div>
+                                <!-- col-sm = quanto maior segue para o lado direito, offset-sm = quanto menor segue para o lado esquerdo -->
+                                <div class="col-sm-3 offset-sm-2">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Email " class="control-label">Email: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="email" name="Email" id="Email" value="@Model?.Email" style="width: 189px;" required pattern="[a-zA-Z0-9._%+-]+[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>&nbsp;</div>
+                            <div>&nbsp;</div>
+
+                            <div class="form-group" align="center">
+                                <button type="submit" class="btn btn-success" title="Atualizar o cadastro do Fornecedor">&nbsp;&nbsp;Atualizar&nbsp;&nbsp;</button>
+                                <a asp-action="Index" class="btn btn-warning ml-2">Voltar</a>
+                            </div>
+                            <div>&nbsp;</div>
+                        </form>
+                    </div>
+
+                    <!-- Modal para exibir mensagens de erro -->
+                    <div class="modal fade" id="meuModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="color: #cc0000; background-color: #ffff99;">
+                                    <h5 style="font-weight: bold; text-align: center; margin: 0 auto; display: table;">ATENÇÃO</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <p id="modalMensagem"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fim Modal para exibir mensagens de erro -->
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<!-- caminhos internos -->
+<script src="~/js/ConsultarCEP.js"></script>
+<script src="~/js/TelefoneFixo.js"></script>
+<script src="~/js/TelefoneCelular.js"></script>
+</html>
+

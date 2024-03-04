@@ -1,0 +1,185 @@
+﻿@model IEnumerable<ICommerceNetCore.Models.ProdutosEstoqueModel>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.9.2/semantic.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.semanticui.min.css" />
+    <!-- Fim CSS -->
+    <!-- JQuery e BootStrap -->
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <!-- Fim JQuery e BootStrap -->
+    <!-- Scripts do DataTables -->
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.semanticui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.9.2/semantic.min.js"></script>
+    <!-- Fim Scripts do DataTables -->
+</head>
+<body>
+    <center><h2 style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; color: #ffcc99;">Cadastro de Produtos</h2></center>
+    <a asp-action="Create" class="btn btn-primary" title="Cadastrar novo Produto no Estoque">Novo Produto</a>
+    <p>&nbsp;</p>
+
+    <div class="container">
+        <table id="tbList" class="ui celled table" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Fornecedor</th>
+                    <th>Marca</th>
+                    <th>PreçoVenda</th>
+                    <th>Estoque Mín.</th>
+                    <th>Estoque Máx.</th>
+                    <th>Data Fabricação</th>
+                    <th>Data Validade</th>
+                    <th style="width: 21px"><em class="fa fa-cog"></em></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var produtosEstoque in Model)
+                    {
+                        <tr>
+                            <td>@(produtosEstoque.Descricao ?? "N/A")</td>
+                            <td>@(produtosEstoque.Fornecedor)</td>
+                            <td>@(produtosEstoque.Marca ?? "N/A")</td>
+                            <td>@(produtosEstoque.Preco_Venda.HasValue ? produtosEstoque.Preco_Venda.Value.ToString("F2") : "N/A")</td>
+                            <td>
+                                @(produtosEstoque.Estoque_Min >= 0 ? produtosEstoque.Estoque_Min.ToString() : "N/A")
+                                @if (produtosEstoque.Estoque_Max <= produtosEstoque.Estoque_Min)
+                                {
+                                    <i class="fas fa-exclamation-circle" style="color: red;" title="Estoque Mínimo igual ou menor que Estoque Máximo!"></i>
+                                }
+                            </td>                            
+                            <td>@(produtosEstoque.Estoque_Max >= 0 ? produtosEstoque.Estoque_Max.ToString() : "N/A")</td>
+                            <td>@(produtosEstoque.Data_Fabricacao.HasValue ? produtosEstoque.Data_Fabricacao.Value.ToShortDateString() : "")</td>
+                            <td>@(produtosEstoque.Data_Validade.HasValue ? produtosEstoque.Data_Validade.Value.ToShortDateString() : "")</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@produtosEstoque.Id" style="color: green" title="Edita os dados do Produto"><i class="fas fa-edit"></i> </a> |
+                                <a asp-action="Delete" asp-route-id="@produtosEstoque.Id" style="color: red" title="Exclui o cadastro do Produto"><i class="fas fa-trash-alt"></i>  </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <p></p>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- Modal que exibe a mensagem quando o Produto é INSERIDO -->
+    <div class="modal fade" id="createSuccessModal" tabindex="-1" aria-labelledby="createSuccessModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="color: #ffff99; background-color: #2eb82e;">
+                    <h5 class="modal-title text-center" style="font-weight: bold; text-align: center; margin: 0 auto; display: table;">SUCESSO</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Os Dados do(a) <b>Produto</b> Foram Inseridos no Cadastro.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fim Modal que exibe a mensagem quando o Produto é INSERIDO -->
+
+    <!-- Modal que exibe a mensagem quando o Produto é ALTERADO -->
+    <div class="modal fade" id="editSuccessModal" tabindex="-1" aria-labelledby="editSuccessModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="color: #ffff99; background-color: #2eb82e;">
+                    <h5 class="modal-title text-center" style="font-weight: bold; text-align: center; margin: 0 auto; display: table;">SUCESSO</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Os Dados do(a) <b>Produto</b> Foram Alterados no Cadastro.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fim Modal que exibe a mensagem quando o Produto é ALTERADO -->
+
+    <!-- Modal que exibe a mensagem quando o Produto é EXCLUÍDO -->
+    <div class="modal fade" id="deleteSuccessModal" tabindex="-1" aria-labelledby="deleteSuccessModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="color: #ffff99; background-color: #2eb82e;">
+                    <h5 class="modal-title text-center" style="font-weight: bold; text-align: center; margin: 0 auto; display: table;">SUCESSO</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Os Dados do(a) <b>Produto</b> Foram Excluídos no Cadastro.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fim Modal que exibe a mensagem quando o Produto é EXCLUÍDO -->
+
+    <!-- Script para Chamar o Modal do Produto Inserido -->
+    <script>
+        $(document).ready(function () {
+            // Variável indicando que a criação foi bem-sucedida
+            var createSuccess = '@TempData["CreateSuccess"]';
+
+            if (createSuccess.toLowerCase() === 'true') {
+                $('#createSuccessModal').modal('show');
+            }
+
+        });
+    </script>
+    <!-- Fim Script para Chamar o Modal do Produto Inserido -->
+
+    <!-- Script para Chamar o Modal Produto Alterado -->
+    <script>
+        $(document).ready(function () {
+            // Variável indicando que a Alteração foi bem-sucedida
+            var editSuccess = '@TempData["EditSuccess"]';
+
+            if (editSuccess.toLowerCase() === 'true') {
+                $('#editSuccessModal').modal('show');
+            }
+        });
+    </script>
+    <!-- Fim Script para Chamar o Modal do Produto Alterado -->
+
+    <!-- Script para Chamar o Modal Produto Excluído -->
+    <script>
+        $(document).ready(function () {
+            // Variável indicando que a Exclusão foi bem-sucedida
+            var deleteSuccess = '@TempData["DeleteSuccess"]';
+
+            if (deleteSuccess.toLowerCase() === 'true') {
+                $('#deleteSuccessModal').modal('show');
+            }
+        });
+    </script>
+    <!-- Fim Script para Chamar o Modal do Produto Excluído -->
+
+    <!-- Script Data Table -->
+    <script type="text/javascript">
+        new DataTable('#tbList', {
+            "pagingType": "first_last_numbers",
+            language:
+            {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json',
+            },
+            "autoWidth": false  // Desabilita o ajuste automático da largura
+        });
+    </script>
+    <!-- Fim Script Data Table -->
+</body>
+</html>
+

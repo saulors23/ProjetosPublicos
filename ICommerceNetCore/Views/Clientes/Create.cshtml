@@ -1,0 +1,253 @@
+﻿@model ICommerceNetCore.Models.ClienteModel
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Fim Font Awesome -->
+
+    <!-- Caminhos externos JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <!-- Fim caminhos externos JS -->    
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card">
+                    <div style="background: #ffbf00" class="card-header text-white">
+                        <h3 class="mb-0">Cadastro de Clientes - Novo</h3>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Create" class="mt-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Nome" class="control-label">Nome: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Nome" id="Nome" data-value="@Model?.Nome" style="width: 350px" required />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 offset-sm-3">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Cpf" class="control-label">Cpf: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Cpf" id="Cpf" data-value="@Model?.Cpf" maxlength="14" style="width: 130px" required oninput="formatarCPF(this)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>&nbsp;</div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Rg" class="control-label">Rg: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Rg" id="Rg" data-value="@Model?.Rg" maxlength="8" style="width: 200px" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required />
+                                    </div>
+                                </div>
+                                <!-- col-sm = quanto maior segue para o lado direito, offset-sm = quanto menor segue para o lado esquerdo -->
+                                <div class="col-sm-3 offset-sm-3">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Cep" class="control-label">CEP: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Cep" id="Cep" data-value="@Model?.Cep" maxlength="8" style="width: 200px" oninput="consultarCEP()" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>&nbsp;</div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Endereco" class="control-label">Endereço: </label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Endereco" id="Endereco" data-value="@Model?.Endereco" style="width: 450px" readonly />
+                                    </div>
+                                </div>
+                                <!-- col-sm = quanto maior segue para o lado direito, offset-sm = quanto menor segue para o lado esquerdo -->
+                                <div class="col-sm-3 offset-sm-3">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Numero" class="control-label">Número: </label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Numero" id="Numero" data-value="@Model?.Numero" style="width: 80px;" maxlength="8" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>&nbsp;</div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Complemento" class="control-label">Complemento: </label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Complemento" id="Complemento" data-value="@Model?.Complemento" tyle="width: 400px;" />
+                                    </div>
+                                </div>
+                                <!-- col-sm = quanto maior segue para o lado direito, offset-sm = quanto menor segue para o lado esquerdo -->
+                                <div class="col-sm-5 offset-sm-3">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Ponto_Referencia" class="control-label">Ponto Referência: </label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Ponto_Referencia" id="Ponto_Referencia" data-value="@Model?.Ponto_Referencia" style="width: 310px;" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>&nbsp;</div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Bairro" class="control-label">Bairro: </label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Bairro" id="Bairro" data-value="@Model?.Bairro" style="width: 210px;" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <!-- col-sm = quanto maior segue para o lado direito, offset-sm = quanto menor segue para o lado esquerdo -->
+                                <div class="col-sm-6 offset-sm-1">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Cidade" class="control-label">Cidade: </label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Cidade" id="Cidade" data-value="@Model?.Cidade" style="width: 220px;" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <!-- col-sm = quanto maior segue para o lado direito, offset-sm = quanto menor segue para o lado esquerdo -->
+                                <div class="col-sm-1 offset-sm-0">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Uf" class="control-label">UF: </label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Uf" id="Uf" data-value="@Model?.Uf" style="width: 40px;" readonly="readonly" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>&nbsp;</div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Fone_Fixo" class="control-label">Fone Fixo: </label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Fone_Fixo" id="Fone_Fixo" data-value="@Model?.Fone_Fixo" maxlength="13" style="width: 120px;" oninput="formatarTelefoneFixo(this)" />
+                                    </div>
+                                </div>
+                                <!-- col-sm = quanto maior segue para o lado direito, offset-sm = quanto menor segue para o lado esquerdo -->
+                                <div class="col-md-3 offset-sm-1">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Celular " class="control-label">Celular: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Celular" id="Celular" data-value="@Model?.Celular" maxlength="14" style="width: 136px;" oninput="formatarTelefoneCelular(this)" required />
+                                    </div>
+                                </div>
+                                <!-- col-sm = quanto maior segue para o lado direito, offset-sm = quanto menor segue para o lado esquerdo -->
+                                <div class="col-sm-3 offset-sm-1">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Email " class="control-label">Email: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="email" name="Email" id="Email" data-value="@Model?.Email" style="width: 189px;" required pattern="[a-zA-Z0-9._%+-]+[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>&nbsp;</div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Empresa " class="control-label">Empresa: </label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Empresa" id="Empresa" data-value="@Model?.Empresa" style="width: 250px;" />
+                                    </div>
+                                </div>
+                                <!-- col-sm = quanto maior segue para o lado direito, offset-sm = quanto menor segue para o lado esquerdo -->
+                                <div class="col-md-4 offset-sm-1">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Cnpj" class="control-label">Cnpj: </label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Cnpj" id="Cnpj" data-value="@Model?.Cnpj" maxlength="18" style="width: 250px;" oninput="formatAndValidateCnpj(this)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>&nbsp;</div>
+                            <div>&nbsp;</div>
+
+                            <div class="form-group" align="center">
+                                <button type="submit" class="btn btn-success" title="Armazena todos os dados do cadastro">&nbsp;&nbsp;Salvar&nbsp;&nbsp;</button>
+                                <a asp-action="Index" class="btn btn-warning ml-2">Voltar</a>
+                            </div>
+                            <div>&nbsp;</div>
+                        </form>
+                    </div>
+
+                    <!-- Modal para exibir mensagens de erro -->
+                    <div class="modal fade" id="meuModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="color: #ffff99; background-color: #cc0000;">
+                                    <h5 style="font-weight: bold; text-align: center; margin: 0 auto; display: table;">ATENÇÃO</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <p id="modalMensagem"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fim Modal para exibir mensagens de erro -->
+
+                    <!-- Modal que exibe a mensagem se o CPF do Cliente já existe na Base de Dados -->
+                    <div class="modal fade" id="createCpfExistsModal" tabindex="-1" aria-labelledby="createCpfExistsLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header" style="color: #ffff99; background-color: #cc0000;">
+                                    <h5 class="modal-title text-center" style="font-weight: bold; text-align: center; margin: 0 auto; display: table;">ATENÇÃO</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>O CPF do(a) <b>Cliente</b> Informado já Existe no Sistema.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fim Modal que exibe a mensagem se o CPF do Cliente já existe na Base de Dados -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS e jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Script para Chamar o Modal Cpf Cliente Existente -->
+    <script>
+        $(document).ready(function () {
+            // Verifica se há erro de CPF existente no ViewBag
+            var cpfExistsError = '@ViewBag.CpfExistsError';
+
+            // Verifica se o modelo está presente
+            var modelExists = '@(Model != null ? "true" : "false")';
+
+            if (cpfExistsError && modelExists.toLowerCase() === 'true') {
+                // Preenche os campos do formulário com os dados do cliente
+                $('#Nome').val($('#Nome').data('value'));
+                $('#Cpf').val($('#Cpf').data('value'));
+                $('#Rg').val($('#Rg').data('value'));
+                $('#Cep').val($('#Cep').data('value'));
+                $('#Endereco').val($('#Endereco').data('value'));
+                $('#Numero').val($('#Numero').data('value'));
+                $('#Complemento').val($('#Complemento').data('value'));
+                $('#Ponto_Referencia').val($('#Ponto_Referencia').data('value'));
+                $('#Bairro').val($('#Bairro').data('value'));
+                $('#Cidade').val($('#Cidade').data('value'));
+                $('#Uf').val($('#Uf').data('value'));
+                $('#Fone_Fixo').val($('#Fone_Fixo').data('value'));
+                $('#Celular').val($('#Celular').data('value'));
+                $('#Email').val($('#Email').data('value'));
+                $('#Empresa').val($('#Empresa').data('value'));
+                $('#Cnpj').val($('#Cnpj').data('value'));
+
+                $('#createCpfExistsModal').modal('show');
+            }
+        });
+    </script>
+    <!-- Fim Script para Chamar o Modal Cpf Cliente Existente -->
+</body>
+</html>
+<!-- caminhos JS internos -->
+<script src="~/js/Cpf.js"></script>
+<script src="~/js/ConsultarCEP.js"></script>
+<script src="~/js/TelefoneFixo.js"></script>
+<script src="~/js/TelefoneCelular.js"></script>
+<script src="~/js/Cnpj.js"></script>

@@ -1,0 +1,348 @@
+﻿@model ICommerceNetCore.Models.ProdutosEstoqueModel
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Fim CSS -->
+
+    <!-- Caminhos externos JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <!-- Fim caminhos externos JS -->
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card">
+                    <div style="background: #ffcc99" class="card-header text-white">
+                        <h3 class="mb-0">Cadastro de Produtos - Novo</h3>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Create" class="mt-4">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Codigo" class="control-label">Código: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Codigo" id="Codigo" maxlength="13" data-value="@Model?.Codigo" style="width: 150px" required />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 offset-sm-1">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Descricao" class="control-label">Descrição: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Descricao" id="Descricao" data-value="@Model?.Descricao" maxlength="255" style="width: 300px" required />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 offset-sm-2">
+                                    @{
+                                        try
+                                        {
+                                            var fornecedores = ((List<SelectListItem>)ViewBag.Fornecedores);
+
+                                            if (fornecedores != null && fornecedores.Any())
+                                            {
+                                                <div class="form-group">
+                                                    <strong>
+                                                        <label asp-for="Fornecedor" class="control-label">Fornecedor: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label>
+                                                    </strong>
+                                                    <select class="form-select form-select-sm" asp-for="@Model.Fornecedor" style="width: 200px" required>
+                                                        <option value="">Selecione um Fornecedor</option>
+                                                        @foreach (var fornecedor in fornecedores.OrderBy(f => f.Text))
+                                                        {
+                                                            <option value="@fornecedor.Text">@((fornecedor.Text != null) ? fornecedor.Text : "")</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <p>Fornecedores não disponíveis.</p>
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            <p>Erro na View: @ex.Message</p>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            <div>&nbsp;</div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Marca" class="control-label">Marca: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Marca" id="Marca" data-value="@Model?.Marca" maxlength="255" style="width: 200px" required />
+                                    </div>
+                                </div>
+                                <!-- col-sm = quanto maior segue para o lado direito, offset-sm = quanto menor segue para o lado esquerdo -->
+                                <div class="col-sm-3 offset-sm-1">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Preco_Custo" class="control-label">Preço Custo: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Preco_Custo" id="Preco_Custo" data-value="@Model?.Preco_Custo" maxlength="16" style="width: 100px" onKeyPress="return(FormataMoeda(this,'.',',',event))" required />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 offset-sm-2">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Preco_Venda" class="control-label">Preço Venda: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Preco_Venda" id="Preco_Venda" data-value="@Model?.Preco_Venda" maxlength="16" style="width: 100px;" onKeyPress="return(FormataMoeda(this,'.',',',event))" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>&nbsp;</div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Estoque_Min" class="control-label">Estoque Mínimo: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Estoque_Min" id="Estoque_Min" data-value="@Model?.Estoque_Min" maxlength="4" style="width: 80px;" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required />
+                                    </div>
+                                </div>
+                                <!-- col-sm = quanto maior segue para o lado direito, offset-sm = quanto menor segue para o lado esquerdo -->
+                                <div class="col-sm-3 offset-sm-1">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Estoque_Max" class="control-label">Estoque Máximo: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="text" name="Estoque_Max" id="Estoque_Max" data-value="@Model?.Estoque_Max" maxlength="4" style="width: 80px;" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 offset-sm-2">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Data_Fabricacao" class="control-label">Data Fabricação: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="date" name="Data_Fabricacao" id="Data_Fabricacao" data-value="@Model?.Data_Fabricacao" style="width: 200px;" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>&nbsp;</div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <strong><label asp-for="Data_Validade" class="control-label">Data Validade: <i class="fas fa-exclamation-circle" style="color: red;" title="Campo de Preenchimento Obrigatório!"></i></label></strong>
+                                        <input class="form-control form-control-sm" type="date" name="Data_Validade" id="Data_Validade" data-value="@Model?.Data_Validade" style="width: 200px;" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>&nbsp;</div>
+                            <div>&nbsp;</div>
+
+                            <div class="form-group" align="center">
+                                <button type="submit" class="btn btn-success" title="Armazena todos os dados do cadastro">&nbsp;&nbsp;Salvar&nbsp;&nbsp;</button>
+                                <a asp-action="Index" class="btn btn-warning ml-2">Voltar</a>
+                            </div>
+                            <div>&nbsp;</div>
+                        </form>
+                    </div>
+
+                    <!-- Modal que exibe a mensagem se o Código do Produto já existe na Base de Dados -->
+                    <div class="modal fade" id="createCodigoExistsModal" tabindex="-1" aria-labelledby="createCodigoExistsLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header" style="color: #ffff99; background-color: #cc0000;">
+                                    <h5 class="modal-title text-center" style="font-weight: bold; text-align: center; margin: 0 auto; display: table;">ATENÇÃO</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>O Código do <b>Produto</b> Informado já Existe no Sistema.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fim Modal que exibe a mensagem se o Código do Produto já existe na Base de Dados -->
+
+                    <!-- Início do Modal que exibe a mensagem se o Preço Custo é maior que o Preço Venda -->
+                    <div class="modal fade" id="precoModal" tabindex="-1" aria-labelledby="precoModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header" style="color: #ffff99; background-color: #cc0000;">
+                                    <h5 class="modal-title text-center" id="precoModalLabel" style="font-weight: bold; text-align: center; margin: 0 auto; display: table;">ATENÇÃO</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>O <b>Preço de Custo</b> não pode ser <b>MAIOR</b> que o <b>Preço de Venda</b>.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fim do Modal que exibe a mensagem se o Preço Custo é maior que o Preço Venda -->
+
+                    <!-- Início do Modal que exibe a mensagem se o Estoque Mínimo é maior que o Estoque máximo -->
+                    <div class="modal fade" id="estoqueModal" tabindex="-1" aria-labelledby="estoqueModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header" style="color: #ffff99; background-color: #cc0000;">
+                                    <h5 class="modal-title text-center" id="estoqueModalLabel" style="font-weight: bold; text-align: center; margin: 0 auto; display: table;">ATENÇÃO</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>O <b>Estoque Mínimo</b> não pode ser <b>MAIOR</b> que o <b>Estoque Máximo</b>.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fim do Modal que exibe a mensagem se o Estoque Minimo é maior que o Estoque Máximo -->
+
+                    <!-- Início do Modal que exibe a mensagem se a Data de Fabricação é maior que a Data de Validade -->
+                    <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header" style="color: #ffff99; background-color: #cc0000;">
+                                    <h5 class="modal-title text-center" id="dataModalLabel" style="font-weight: bold; text-align: center; margin: 0 auto; display: table;">ATENÇÃO</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>A <b>Data de Fabricação</b> não pode ser <b>MAIOR</b> que a <b>Data de Validade</b>.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fim do Modal que exibe a mensagem se a Data de Fabricação é maior que a Data de Validade -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS e jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Script para Chamar o Modal Código do Produto Existente -->
+    <script>
+
+        function convertToDateFormat(dateString) {
+            // Apenas retorna a string original se não for um formato válido
+            if (!dateString) return dateString;
+
+            // Divide a string da data
+            var dateParts = dateString.split(' ')[0].split('/');
+
+            // Obtém os componentes da data
+            var day = parseInt(dateParts[0], 10);
+            var month = parseInt(dateParts[1], 10);
+            var year = parseInt(dateParts[2], 10);
+
+            // Se algum componente não for um número válido, retorna a string original
+            if (isNaN(day) || isNaN(month) || isNaN(year)) return dateString;
+
+            // Formata a data para "yyyy-MM-dd"
+            var formattedDate = year + '-' + ('0' + month).slice(-2) + '-' + ('0' + day).slice(-2);
+
+
+            return formattedDate;
+        }
+
+        $(document).ready(function () {
+            
+            var codigoExistsError = '@ViewBag.CodigoExistsError';
+            var modelExists = '@(Model != null ? "true" : "false")';
+
+            if (codigoExistsError && modelExists.toLowerCase() === 'true') 
+            {
+                // Preenche os campos do formulário com os dados do Produto
+                $('#Codigo').val($('#Codigo').data('value'));
+                $('#Descricao').val($('#Descricao').data('value'));
+                $('#Marca').val($('#Marca').data('value'));
+                $('#Preco_Custo').val($('#Preco_Custo').data('value'));
+                $('#Preco_Venda').val($('#Preco_Venda').data('value'));
+                $('#Estoque_Min').val($('#Estoque_Min').data('value'));
+                $('#Estoque_Max').val($('#Estoque_Max').data('value'));
+
+                // Obtém os valores dos atributos data-value
+                var dataFabricacaoValue = $('#Data_Fabricacao').data('value');
+                var dataValidadeValue = $('#Data_Validade').data('value');
+
+                // Converte para o formato "yyyy-MM-dd"
+                var dataFabricacaoFormatted = convertToDateFormat(dataFabricacaoValue);
+                var dataValidadeFormatted = convertToDateFormat(dataValidadeValue);
+
+                // Atribui os valores formatados aos campos
+                $('#Data_Fabricacao').val(dataFabricacaoFormatted);
+                $('#Data_Validade').val(dataValidadeFormatted);
+
+                $('#createCodigoExistsModal').modal('show');
+            }
+        });
+    </script>
+    <!-- Fim Script para Chamar o Modal Código Produto Existente -->
+
+    <!-- Início Script Validação do Preço de Custo maior que o Preço de Venda -->
+    <script>
+        $(document).ready(function () {
+            // Adiciona um evento de submit ao formulário
+            $('form').submit(function (e) {
+                var precoCusto = parseFloat($('#Preco_Custo').val().replace(',', '.'));
+                var precoVenda = parseFloat($('#Preco_Venda').val().replace(',', '.'));
+
+                if (precoCusto > precoVenda) {
+                    $('#precoModal').modal('show');
+
+                    // Impede o envio do form
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+    <!-- Fim Script Validação do Preço de Custo maior que o Preço de Venda -->
+
+    <!-- Início Script Validação do Estoque Mínimo maior que o Estoque Máximo -->
+    <script>
+        $(document).ready(function () {
+            // Adiciona um evento de submit ao formulário
+            $('form').submit(function (e) {
+                var estoqueMin = $('#Estoque_Min').val();
+                var estoqueMax = $('#Estoque_Max').val();
+
+                if (estoqueMin > estoqueMax) {
+                    $('#estoqueModal').modal('show');
+
+                    // Impede o envio do form
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+    <!-- Fim Script Validação do Estoque Mínimo maior que o Estoque Máximo -->
+
+    <!-- Início Script Validação da Data Fabricação maior que a Data Validade -->
+    <script>
+        $(document).ready(function () {
+            // Adiciona um evento de submit ao formulário
+            $('form').submit(function (e) {
+
+                var dataFabricacao = $('#Data_Fabricacao').val();
+                var dataValidade = $('#Data_Validade').val();
+
+                if (dataFabricacao > dataValidade) {
+                    $('#dataModal').modal('show');
+
+                    // Impede o envio do form
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+    <!-- Fim Script Validação da Data Fabricação maior que a Data Validade -->
+</body>
+</html>
+
+<!-- caminhos JS internos -->
+<script src="~/js/FormataMoeda.js"></script>
